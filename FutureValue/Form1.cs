@@ -19,17 +19,26 @@ namespace FutureValue
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
-            decimal monthlyInvestment = Convert.ToDecimal(txtMonthlyInvestment.Text);
-            decimal yearlyInterestRate = Convert.ToDecimal(txtInterestRate.Text);
-            int years = Convert.ToInt32(txtYears.Text);
+            try
+            {
+                if (IsValidData())
+                {
+                    decimal monthlyInvestment = Convert.ToDecimal(txtMonthlyInvestment.Text);
+                    decimal yearlyInterestRate = Convert.ToDecimal(txtInterestRate.Text);
+                    int years = Convert.ToInt32(txtYears.Text);
 
-            int months = years * 12;
-            decimal monthlyInterestRate = yearlyInterestRate / 12 / 100;
+                    int months = years * 12;
+                    decimal monthlyInterestRate = yearlyInterestRate / 12 / 100;
 
-            decimal futureValue = this.CalculateFutureValue(
-                monthlyInvestment, monthlyInterestRate, months);
-            txtFutureValue.Text = futureValue.ToString("c");
-            txtMonthlyInvestment.Focus();
+                    decimal futureValue = this.CalculateFutureValue(monthlyInvestment, monthlyInterestRate, months);
+                    txtFutureValue.Text = futureValue.ToString("c");
+                    txtMonthlyInvestment.Focus();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n\n" + ex.GetType() + "\n\n" + ex.StackTrace, "Exception");
+            }
         }
 
         private decimal CalculateFutureValue(decimal monthlyInvestment, 
@@ -38,8 +47,7 @@ namespace FutureValue
             decimal futureValue = 0m;
             for (int i = 0; i < months; i++)
             {
-                futureValue = (futureValue + monthlyInvestment)
-                            * (1 + monthlyInterestRate);
+                futureValue = (futureValue + monthlyInvestment) * (1 + monthlyInterestRate);
             }
             return futureValue;
         }
@@ -48,5 +56,94 @@ namespace FutureValue
         {
             this.Close();
         }
+        
+        public bool IsPresent(TextBox textBox, string name)
+        {
+            if (textBox.Text == "")
+            {
+                MessageBox.Show(name + " is a required field.", "Entry Error");
+                textBox.Focus();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool IsDecimal (TextBox textBox, string name)
+        {
+            decimal number = 0m;
+            if (decimal.TryParse(textBox.Text, out number))
+            {
+                return true;
+            }
+            else
+            {
+                MessageBox.Show(name + " must be a decimal value.", "Entry Error");
+                textBox.Focus();
+                return false;
+            }
+        }
+
+        public bool IsInt32(TextBox textBox, string name)
+        {
+            int number = 0;
+            if (Int32.TryParse(textBox.Text, out number))
+            {
+                return true;
+            }
+            else
+            {
+                MessageBox.Show(name + " must be an integer.", "Entry Error");
+                textBox.Focus();
+                return false;
+            }
+        }
+
+        public bool IsWithinRange(TextBox textBox, string name, decimal min, decimal max)
+        {
+            decimal number = Convert.ToDecimal(textBox.Text);
+            if (number < min || number > max)
+            {
+                MessageBox.Show(name + " must be between " + min + " and " + max);
+                textBox.Focus();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool IsValidData()
+        {
+            return
+                IsPresent(txtMonthlyInvestment, "Monthly Investment") && IsDecimal(txtMonthlyInvestment, "Monthly Investment") &&
+                IsWithinRange(txtMonthlyInvestment, "Monthly Investment", 1, 1000) &&
+
+                IsPresent(txtInterestRate, "Yearly Interest Rate") && IsDecimal(txtInterestRate, "Yearly Interest Rate") &&
+                IsWithinRange(txtInterestRate, "Yearly Interest Rate", 1, 20) &&
+
+                IsPresent(txtYears, "Number of Years") && IsInt32(txtYears, "Number of Years") &&
+                IsWithinRange(txtYears, "Number of Years", 1, 40);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

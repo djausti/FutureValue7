@@ -131,7 +131,7 @@ namespace FutureValue
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnExit;
-            this.ClientSize = new System.Drawing.Size(243, 160);
+            this.ClientSize = new System.Drawing.Size(238, 174);
             this.Controls.Add(this.txtFutureValue);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnCalculate);
