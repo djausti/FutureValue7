@@ -128,22 +128,5 @@ namespace FutureValue
                 IsPresent(txtYears, "Number of Years") && IsInt32(txtYears, "Number of Years") &&
                 IsWithinRange(txtYears, "Number of Years", 1, 40);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
